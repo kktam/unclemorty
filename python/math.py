@@ -101,6 +101,19 @@ def findlottopick(inputStr):
             # calculate possible double digit
             n = l[i] * 10 + l[i+1]
 
+            # scan remaining of list for possible identical "double digit number pattern"
+            # to prevent situation where a double digit is chosen first, and then later another 
+            # pattern is found, needed, but cannot be used (because it is used already)
+            try:
+                if i > 1 and i+2 < inputLen:
+                    remainArr = l[i+2:]
+                    remainStrAfterDoubleDigitUsed = "".join(str(x) for x in remainArr)
+                    if remainStrAfterDoubleDigitUsed.find(str(n)) != -1:
+                        specialCaseUseSingleDigit = 1
+            except: # catch *all* exceptions
+                e = sys.exc_info()[0]
+                print "<p>Error: %s</p>" % e
+
             # if double digit within valid range, and not under pressure to
             # use single digit
             if (n >= minLottoNum 
@@ -164,5 +177,13 @@ if __name__ == "__main__":
         success, picks = findlottopick(inputStr)
 
         if success is True:
-            print "%s -> %s" % (inputStr, picks)             
+            print "%s -> %s" % (inputStr, picks)   
+
+    print "\nAdditional test case as requested"
+    sequence = [ "5698157156" ]
+    for inputStr in sequence:
+        success, picks = findlottopick(inputStr)
+
+        if success is True:
+            print "%s -> %s" % (inputStr, picks)                      
                        
